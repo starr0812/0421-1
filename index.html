@@ -1,0 +1,1333 @@
+<html lang="zh-CN"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XUZHONG | 个人作品集</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- AOS Animation Library -->
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    
+    <!-- Tailwind Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary': '#000000',
+                        'secondary': '#666666',
+                        'accent': '#333333',
+                        'light': '#ffffff',
+                        'light-gray': '#f5f5f5',
+                        'medium-gray': '#e0e0e0',
+                        'dark-gray': '#999999'
+                    },
+                    fontFamily: {
+                        'sans': ['Inter', 'system-ui', 'sans-serif']
+                    },
+                    transitionProperty: {
+                        'height': 'height',
+                        'spacing': 'margin, padding',
+                        'transform-opacity': 'transform, opacity'
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .transition-transform {
+                transition-property: transform;
+                transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+                transition-duration: 300ms;
+            }
+            .hover-scale {
+                @apply hover:scale-105 transition-transform duration-700;
+            }
+            .text-gradient {
+                background-clip: text;
+                -webkit-background-clip: text;
+                color: transparent;
+                background-image: linear-gradient(to right, #000000, #666666);
+            }
+            .bg-grid {
+                background-image: 
+                    linear-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
+                background-size: 20px 20px;
+            }
+            .line-element {
+                @apply h-px bg-black opacity-70;
+            }
+            .corner-line {
+                @apply absolute;
+            }
+            .corner-line::before {
+                content: '';
+                @apply absolute right-0 top-0 h-16 w-px bg-black;
+            }
+            .corner-line::after {
+                content: '';
+                @apply absolute right-0 top-0 h-px w-16 bg-black;
+            }
+            .diagonal-line {
+                @apply absolute h-24 w-px bg-black origin-bottom-left transform rotate-45;
+            }
+            .horizontal-line {
+                @apply absolute left-0 h-px bg-black opacity-70;
+            }
+            .vertical-line {
+                @apply absolute top-0 w-px bg-black opacity-70;
+            }
+        }
+        
+        /* Custom Styles */
+        body {
+            background-color: #ffffff;
+            color: #000000;
+            font-family: 'Inter', system-ui, sans-serif;
+            overflow-x: hidden;
+        }
+        
+        .cursor-follow {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            border: 1px solid #000000;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            mix-blend-mode: difference;
+            transition: transform 0.1s ease, width 0.3s ease, height 0.3s ease;
+            transform: translate(-50%, -50%);
+        }
+        
+        .nav-link {
+            position: relative;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background-color: #000000;
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        .project-card {
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .project-card img {
+            transition: transform 0.7s ease;
+        }
+        
+        .project-card:hover img {
+            transform: scale(1.05);
+        }
+        
+        .project-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 1.5rem;
+        }
+        
+        .project-card:hover .project-overlay {
+            opacity: 1;
+        }
+        
+        .skill-bar {
+            height: 2px;
+            background-color: #e0e0e0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .skill-progress {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            background-color: #000000;
+            transition: width 1.5s ease;
+        }
+        
+        .char-reveal span {
+            opacity: 0;
+            filter: blur(4px);
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+        
+        .char-reveal.active span {
+            opacity: 1;
+            filter: blur(0);
+        }
+        
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #ffffff;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #e0e0e0;
+            border-radius: 3px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #999999;
+        }
+        
+        /* Typing Effect */
+        .typing-cursor {
+            display: inline-block;
+            width: 2px;
+            height: 1.2em;
+            background-color: #000000;
+            margin-left: 4px;
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        
+        /* Parallax Effect */
+        .parallax-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            transition: transform 0.1s ease-out;
+        }
+        
+        /* Screen Transition Effects */
+        .screen {
+            position: relative;
+            min-height: 100vh;
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        /* High Density Layout */
+        .dense-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 0.5rem;
+        }
+        
+        /* Custom Button Styles */
+        .line-button {
+            position: relative;
+            padding: 0.75rem 1.5rem;
+            border: 1px solid #000000;
+            color: #000000;
+            transition: all 0.3s ease;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .line-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 100%;
+            background-color: #000000;
+            transition: width 0.3s ease;
+            z-index: -1;
+        }
+        
+        .line-button:hover {
+            color: #ffffff;
+        }
+        
+        .line-button:hover::before {
+            width: 100%;
+        }
+        
+        /* Responsive Line Elements */
+        @media (max-width: 768px) {
+            .diagonal-line {
+                display: none;
+            }
+            
+            .corner-line {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Mouse Cursor Follow -->
+    <div class="cursor-follow"></div>
+    
+    <!-- Parallax Background -->
+    <div class="parallax-bg opacity-20">
+        <img src="\imgage\export (5).jpg" alt="Background Pattern" class="w-full h-full object-cover">
+    </div>
+    
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 w-full bg-white/90 backdrop-blur-md z-50 border-b border-gray-200">
+        <div class="max-w-screen-xl mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <a href="#" class="text-2xl font-light tracking-wider">
+                    <span class="text-black">XXUZHONG</span><span class="text-gray-500">个人作品集</span>
+                </a>
+                
+                <!-- Desktop Navigation -->
+                <div class="hidden md:flex space-x-12">
+                    <a href="#home" class="nav-link text-sm uppercase tracking-widest text-gray-600 hover:text-black transition-colors">首页</a>
+                    <a href="#about" class="nav-link text-sm uppercase tracking-widest text-gray-600 hover:text-black transition-colors">关于我</a>
+                    <a href="#projects" class="nav-link text-sm uppercase tracking-widest text-gray-600 hover:text-black transition-colors">作品展示</a>
+                    <a href="#experience" class="nav-link text-sm uppercase tracking-widest text-gray-600 hover:text-black transition-colors">工作经历</a>
+                    <a href="#skills" class="nav-link text-sm uppercase tracking-widest text-gray-600 hover:text-black transition-colors">个人技能</a>
+                    <a href="#contact" class="nav-link text-sm uppercase tracking-widest text-gray-600 hover:text-black transition-colors">联系我</a>
+                </div>
+                
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-button" class="md:hidden text-black focus:outline-none">
+                    <i class="fa fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Mobile Navigation -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-200">
+            <div class="max-w-screen-xl mx-auto px-6 py-4">
+                <div class="flex flex-col space-y-4">
+                    <a href="#home" class="text-sm uppercase tracking-widest text-gray-600 hover:text-black transition-colors py-2">首页</a>
+                    <a href="#about" class="text-sm uppercase tracking-widest text-gray-600 hover:text-black transition-colors py-2">关于我</a>
+                    <a href="#projects" class="text-sm uppercase tracking-widest text-gray-600 hover:text-black transition-colors py-2">作品展示</a>
+                    <a href="#experience" class="text-sm uppercase tracking-widest text-gray-600 hover:text-black transition-colors py-2">工作经历</a>
+                    <a href="#skills" class="text-sm uppercase tracking-widest text-gray-600 hover:text-black transition-colors py-2">个人技能</a>
+                    <a href="#contact" class="text-sm uppercase tracking-widest text-gray-600 hover:text-black transition-colors py-2">联系我</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Hero Section -->
+    <section id="home" class="screen relative min-h-screen flex items-center justify-center z-50 overflow-hidden">
+        <div class="absolute inset-0 bg-grid opacity-30"></div>
+        
+        <!-- Decorative Lines -->
+        <div class="absolute top-0 left-0 w-full h-full pointer-events-none">
+            <div class="horizontal-line top-1/4 w-3/4"></div>
+            <div class="horizontal-line top-2/4 w-2/4"></div>
+            <div class="horizontal-line top-3/4 w-1/2"></div>
+            <div class="vertical-line left-1/4 h-3/4"></div>
+            <div class="vertical-line left-2/4 h-2/4"></div>
+            <div class="vertical-line left-3/4 h-1/2"></div>
+        </div>
+        
+        <div class="max-w-screen-xl mx-auto px-6 py-20 text-center z-10">
+            <h1 class="text-5xl md:text-7xl lg:text-8xl font-light mb-6" data-aos="fade-up" data-aos-delay="200">
+                我是一名<span id="typing-text" class="font-normal text-gradient" style="font-size: 96px;">AIGC设计师</span>
+                <span class="typing-cursor"></span>
+            </h1>
+            <p class="text-xl md:text-2xl text-gray-600 max-w-2xl mx-auto mb-12" data-aos="fade-up" data-aos-delay="400">
+                专注于创造简约而有力的视觉体验，通过设计传达情感与理念
+            </p>
+            <div class="flex justify-center" data-aos="fade-up" data-aos-delay="600">
+                <a href="#projects" class="line-button px-8 py-3 uppercase tracking-wider text-sm">
+                    查看作品
+                </a>
+            </div>
+        </div>
+        
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
+            <i class="fa fa-angle-down text-2xl text-gray-400"></i>
+        </div>
+    </section>
+    
+    <!-- About Section -->
+    <section id="about" class="screen relative min-h-screen py-24 bg-white z-40">
+        <div class="max-w-screen-xl mx-auto px-6">
+            <!-- Section Header with Lines -->
+            <div class="section-header relative mb-24">
+                <div class="horizontal-line top-12 w-full"></div>
+                <h2 class="text-3xl md:text-4xl font-light inline-block bg-white px-4 relative z-10">关于我</h2>
+                <div class="corner-line right-0 top-0"></div>
+                <div class="diagonal-line -right-8 bottom-0"></div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+                <div data-aos="fade-right">
+                    <div class="relative">
+                        <img src="https://p11-doubao-search-sign.byteimg.com/labis/51dff14e545cdc325ca646a79a0e0fae~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&amp;x-expires=1792231224&amp;x-signature=2AEqiDxKchsX1IAEUUnmpUugjmY%3D" alt="Portrait" class="w-full h-auto object-cover hover-scale">
+                        <div class="absolute -bottom-4 -right-4 w-32 h-32 border border-black opacity-30"></div>
+                        <div class="absolute -top-4 -left-4 w-32 h-32 border border-black opacity-30"></div>
+                    </div>
+                </div>
+                
+                <div data-aos="fade-left">
+                    <div class="space-y-6">
+                        <p class="text-gray-700 leading-relaxed">
+                            我是一名充满激情的电商设计师，专注于创造简约而有力的视觉体验。我的设计理念是"少即是多"，通过精心的排版、空间和色彩运用，传达最核心的信息。
+                        </p>
+                        <p class="text-gray-700 leading-relaxed">
+                            拥有超过5年的设计经验，我擅长品牌详情设计、视觉设计和创意设计。我相信设计不仅仅是关于美学，更是关于解决问题和创造体验。
+                        </p>
+                        
+                        <div class="grid grid-cols-[120px_1fr] gap-y-4 mt-10">
+                            <span class="text-gray-500">姓名</span>
+                            <span class="text-black">徐仲</span>
+                            
+                            <span class="text-gray-500">职业</span>
+                            <span class="text-black">电商设计师</span>
+                            
+                            <span class="text-gray-500">邮箱</span>
+                            <span class="text-black">xuzhong@qq.com</span>
+                            
+                            <span class="text-gray-500">所在地</span>
+                            <span class="text-black">上海，中国</span>
+                        </div>
+                        
+                        <div class="mt-10">
+                            <a href="#contact" class="line-button inline-block px-8 py-3 uppercase tracking-wider text-sm">
+                                联系我
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Projects Section -->
+    <section id="projects" class="screen relative min-h-screen py-24 bg-light-gray z-30">
+        <div class="max-w-screen-xl mx-auto px-6">
+            <!-- Section Header with Lines -->
+            <div class="section-header relative mb-24">
+                <div class="horizontal-line top-12 w-full"></div>
+                <h2 class="text-3xl md:text-4xl font-light inline-block bg-light-gray px-4 relative z-10">作品展示</h2>
+                <div class="corner-line right-0 top-0"></div>
+                <div class="diagonal-line -right-8 bottom-0"></div>
+            </div>
+            
+            <!-- Project Filter -->
+            <div class="flex flex-wrap justify-center gap-4 mb-12" data-aos="fade-up">
+                <button class="filter-btn active px-6 py-2 border border-black bg-black text-white hover:bg-white hover:text-black transition-colors" data-filter="all">全部</button>
+                <button class="filter-btn px-6 py-2 border border-black text-black hover:bg-black hover:text-white transition-colors" data-filter="ui">电商详情</button>
+                <button class="filter-btn px-6 py-2 border border-black text-black hover:bg-black hover:text-white transition-colors" data-filter="product">产品设计</button>
+                <button class="filter-btn px-6 py-2 border border-black text-black hover:bg-black hover:text-white transition-colors" data-filter="brand">品牌设计</button>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Project 1 -->
+                <div class="project-card group bg-white p-4 shadow-sm hover:shadow-md transition-shadow" data-category="ui" data-aos="fade-up" data-aos-delay="100">
+                    <div class="aspect-[4/3] overflow-hidden">
+                        <img src="https://p3-doubao-search-sign.byteimg.com/labis/9712a446f873da39349608e6ca78382a~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&amp;x-expires=1792231224&amp;x-signature=3u3QbF23tkZTHZKDYzix7JFd0aQ%3D" alt="UI设计" class="w-full h-full object-cover">
+                        <div class="project-overlay">
+                            <h3 class="text-xl font-medium mb-2 text-white">数据可视化界面</h3>
+                            <p class="text-sm text-gray-200 mb-4">简洁高效的数据展示界面设计</p>
+                            <button class="text-xs uppercase tracking-wider border-b border-white pb-1 hover:text-gray-300 transition-colors project-details-btn" data-project="project1">
+                                查看详情
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Project 2 -->
+                <div class="project-card group bg-white p-4 shadow-sm hover:shadow-md transition-shadow" data-category="product" data-aos="fade-up" data-aos-delay="200">
+                    <div class="aspect-[4/3] overflow-hidden">
+                        <img src="https://p11-doubao-search-sign.byteimg.com/labis/36b423748d4db712636b12f0d8c7d8e5~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&amp;x-expires=1792231224&amp;x-signature=%2BpnLDdeg47I6FmiXNvs805Ej%2Bbc%3D" alt="产品设计" class="w-full h-full object-cover">
+                        <div class="project-overlay">
+                            <h3 class="text-xl font-medium mb-2 text-white">极简产品包装</h3>
+                            <p class="text-sm text-gray-200 mb-4">简约优雅的产品包装设计</p>
+                            <button class="text-xs uppercase tracking-wider border-b border-white pb-1 hover:text-gray-300 transition-colors project-details-btn" data-project="project2">
+                                查看详情
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Project 3 -->
+                <div class="project-card group bg-white p-4 shadow-sm hover:shadow-md transition-shadow" data-category="brand" data-aos="fade-up" data-aos-delay="300">
+                    <div class="aspect-[4/3] overflow-hidden">
+                        <img src="https://p11-doubao-search-sign.byteimg.com/tos-cn-i-be4g95zd3a/2303672410064814084~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&amp;x-expires=1792231224&amp;x-signature=6Zet8JatUTU9VfzQR2XaWxSroAM%3D" alt="品牌设计" class="w-full h-full object-cover">
+                        <div class="project-overlay">
+                            <h3 class="text-xl font-medium mb-2 text-white">品牌标识设计</h3>
+                            <p class="text-sm text-gray-200 mb-4">极简主义品牌标识设计</p>
+                            <button class="text-xs uppercase tracking-wider border-b border-white pb-1 hover:text-gray-300 transition-colors project-details-btn" data-project="project3">
+                                查看详情
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Project 4 -->
+                <div class="project-card group bg-white p-4 shadow-sm hover:shadow-md transition-shadow" data-category="ui" data-aos="fade-up" data-aos-delay="400">
+                    <div class="aspect-[4/3] overflow-hidden">
+                        <img src="https://p11-doubao-search-sign.byteimg.com/mosaic-legacy/31f00003db691ed4f93c~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&amp;x-expires=1792231224&amp;x-signature=5u7RAVoSh0LRbNx1WS%2F7dQGMgfU%3D" alt="移动应用设计" class="w-full h-full object-cover">
+                        <div class="project-overlay">
+                            <h3 class="text-xl font-medium mb-2 text-white">移动应用界面</h3>
+                            <p class="text-sm text-gray-200 mb-4">色彩丰富的移动应用界面设计</p>
+                            <button class="text-xs uppercase tracking-wider border-b border-white pb-1 hover:text-gray-300 transition-colors project-details-btn" data-project="project4">
+                                查看详情
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Project 5 -->
+                <div class="project-card group bg-white p-4 shadow-sm hover:shadow-md transition-shadow" data-category="product" data-aos="fade-up" data-aos-delay="500">
+                    <div class="aspect-[4/3] overflow-hidden">
+                        <img src="https://p11-doubao-search-sign.byteimg.com/tos-cn-i-be4g95zd3a/2291789841924358147~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&amp;x-expires=1792231224&amp;x-signature=3cEkR62m4tsJH8oK4enX6KkEYlE%3D" alt="产品设计" class="w-full h-full object-cover">
+                        <div class="project-overlay">
+                            <h3 class="text-xl font-medium mb-2 text-white">化妆品包装设计</h3>
+                            <p class="text-sm text-gray-200 mb-4">简洁现代的化妆品包装设计</p>
+                            <button class="text-xs uppercase tracking-wider border-b border-white pb-1 hover:text-gray-300 transition-colors project-details-btn" data-project="project5">
+                                查看详情
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Project 6 -->
+                <div class="project-card group bg-white p-4 shadow-sm hover:shadow-md transition-shadow" data-category="brand" data-aos="fade-up" data-aos-delay="600">
+                    <div class="aspect-[4/3] overflow-hidden">
+                        <img src="https://p26-doubao-search-sign.byteimg.com/pgc-image/3b7d458748944ac3a86cca6fdb2caf03~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&amp;x-expires=1792231224&amp;x-signature=q9uj%2FOi6a04MAuFnwWp24R5E0gw%3D" alt="品牌设计" class="w-full h-full object-cover">
+                        <div class="project-overlay">
+                            <h3 class="text-xl font-medium mb-2 text-white">品牌图标设计</h3>
+                            <p class="text-sm text-gray-200 mb-4">简约线条风格的品牌图标设计</p>
+                            <button class="text-xs uppercase tracking-wider border-b border-white pb-1 hover:text-gray-300 transition-colors project-details-btn" data-project="project6">
+                                查看详情
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Experience Section -->
+    <section id="experience" class="screen relative min-h-screen py-24 bg-white z-20">
+        <div class="max-w-screen-xl mx-auto px-6">
+            <!-- Section Header with Lines -->
+            <div class="section-header relative mb-24">
+                <div class="horizontal-line top-12 w-full"></div>
+                <h2 class="text-3xl md:text-4xl font-light inline-block bg-white px-4 relative z-10">工作经历</h2>
+                <div class="corner-line right-0 top-0"></div>
+                <div class="diagonal-line -right-8 bottom-0"></div>
+            </div>
+            
+            <div class="dense-grid">
+                <!-- Timeline Line -->
+                <div class="col-span-1 md:col-span-2">
+                    <div class="relative h-full">
+                        <div class="vertical-line left-1/2 top-0 h-full"></div>
+                        
+                        <!-- Timeline Dots -->
+                        <div class="absolute left-1/2 top-0 transform -translate-x-1/2 w-4 h-4 rounded-full bg-black"></div>
+                        <div class="absolute left-1/2 top-1/3 transform -translate-x-1/2 w-4 h-4 rounded-full bg-black"></div>
+                        <div class="absolute left-1/2 top-2/3 transform -translate-x-1/2 w-4 h-4 rounded-full bg-black"></div>
+                        <div class="absolute left-1/2 bottom-0 transform -translate-x-1/2 w-4 h-4 rounded-full bg-black"></div>
+                    </div>
+                </div>
+                
+                <!-- Timeline Content -->
+                <div class="col-span-1 md:col-span-10">
+                    <div class="space-y-24">
+                        <!-- Experience 1 -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8" data-aos="fade-up">
+                            <div class="md:text-right">
+                                <h3 class="text-2xl font-light mb-2">高级电商设计师</h3>
+                                <p class="text-gray-600 mb-4">阿里巴巴集团</p>
+                                <p class="text-sm text-gray-500">2022 - 至今</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-700">负责天猫平台核心电商页面设计，优化用户购物体验，提升转化率。主导多个大型促销活动的视觉设计，包括双11、618等。</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Experience 2 -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8" data-aos="fade-up" data-aos-delay="100">
+                            <div class="md:text-right order-2 md:order-1">
+                                <p class="text-gray-700">负责京东平台的产品页面设计和优化，参与品牌视觉升级项目，提升品牌识别度和用户体验。</p>
+                            </div>
+                            <div class="order-1 md:order-2">
+                                <h3 class="text-2xl font-light mb-2">UI/UX设计师</h3>
+                                <p class="text-gray-600 mb-4">京东科技</p>
+                                <p class="text-sm text-gray-500">2020 - 2022</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Experience 3 -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8" data-aos="fade-up" data-aos-delay="200">
+                            <div class="md:text-right">
+                                <h3 class="text-2xl font-light mb-2">品牌设计师</h3>
+                                <p class="text-gray-600 mb-4">腾讯科技</p>
+                                <p class="text-sm text-gray-500">2018 - 2020</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-700">负责腾讯多个产品线的品牌设计工作，包括logo设计、品牌视觉识别系统建设、营销物料设计等。</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Education -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8" data-aos="fade-up" data-aos-delay="300">
+                            <div class="md:text-right order-2 md:order-1">
+                                <p class="text-gray-700">主修视觉传达设计，专注于UI/UX设计和品牌设计方向。获得优秀毕业生称号，毕业设计获得学院设计大赛金奖。</p>
+                            </div>
+                            <div class="order-1 md:order-2">
+                                <h3 class="text-2xl font-light mb-2">视觉传达设计</h3>
+                                <p class="text-gray-600 mb-4">中央美术学院</p>
+                                <p class="text-sm text-gray-500">2014 - 2018</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Skills Section -->
+    <section id="skills" class="screen relative min-h-screen py-24 bg-light-gray z-10">
+        <div class="max-w-screen-xl mx-auto px-6">
+            <!-- Section Header with Lines -->
+            <div class="section-header relative mb-24">
+                <div class="horizontal-line top-12 w-full"></div>
+                <h2 class="text-3xl md:text-4xl font-light inline-block bg-light-gray px-4 relative z-10">个人技能</h2>
+                <div class="corner-line right-0 top-0"></div>
+                <div class="diagonal-line -right-8 bottom-0"></div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-16">
+                <div data-aos="fade-right">
+                    <h3 class="text-xl font-light mb-8">专业技能</h3>
+                    
+                    <!-- Skill Bars -->
+                    <div class="space-y-8">
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="text-sm text-gray-700">UI/UX设计</span>
+                                <span class="text-sm text-gray-500">95%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 0%;" data-width="95%"></div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="text-sm text-gray-700">品牌设计</span>
+                                <span class="text-sm text-gray-500">90%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 0%;" data-width="90%"></div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="text-sm text-gray-700">电商设计</span>
+                                <span class="text-sm text-gray-500">98%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 0%;" data-width="98%"></div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="text-sm text-gray-700">摄影</span>
+                                <span class="text-sm text-gray-500">85%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 0%;" data-width="85%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div data-aos="fade-left">
+                    <h3 class="text-xl font-light mb-8">工具掌握</h3>
+                    
+                    <!-- Tool Grid -->
+                    <div class="grid grid-cols-2 gap-6">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-12 h-12 flex items-center justify-center border border-gray-300 rounded-full">
+                                <i class="fa fa-paint-brush text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-medium">Adobe Creative Suite</h4>
+                                <p class="text-xs text-gray-500">Photoshop, Illustrator, XD</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center space-x-4">
+                            <div class="w-12 h-12 flex items-center justify-center border border-gray-300 rounded-full">
+                                <i class="fa fa-camera text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-medium">摄影器材</h4>
+                                <p class="text-xs text-gray-500">Canon, Sony, Lighting</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center space-x-4">
+                            <div class="w-12 h-12 flex items-center justify-center border border-gray-300 rounded-full">
+                                <i class="fa fa-code text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-medium">前端开发</h4>
+                                <p class="text-xs text-gray-500">HTML, CSS, JavaScript</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center space-x-4">
+                            <div class="w-12 h-12 flex items-center justify-center border border-gray-300 rounded-full">
+                                <i class="fa fa-object-group text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-medium">3D工具</h4>
+                                <p class="text-xs text-gray-500">Blender, Cinema 4D</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Services -->
+                    <div class="mt-16">
+                        <h3 class="text-xl font-light mb-8">我的服务</h3>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="p-6 border border-gray-200 hover:border-black transition-colors duration-300">
+                                <h4 class="text-lg font-medium mb-2">品牌设计</h4>
+                                <p class="text-sm text-gray-600">品牌标识、视觉识别系统、品牌指南</p>
+                            </div>
+                            
+                            <div class="p-6 border border-gray-200 hover:border-black transition-colors duration-300">
+                                <h4 class="text-lg font-medium mb-2">UI/UX设计</h4>
+                                <p class="text-sm text-gray-600">网站界面、移动应用、交互设计</p>
+                            </div>
+                            
+                            <div class="p-6 border border-gray-200 hover:border-black transition-colors duration-300">
+                                <h4 class="text-lg font-medium mb-2">电商设计</h4>
+                                <p class="text-sm text-gray-600">产品页面、活动页面、店铺设计</p>
+                            </div>
+                            
+                            <div class="p-6 border border-gray-200 hover:border-black transition-colors duration-300">
+                                <h4 class="text-lg font-medium mb-2">创意咨询</h4>
+                                <p class="text-sm text-gray-600">设计策略、创意方向、品牌咨询</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Contact Section -->
+    <section id="contact" class="screen relative min-h-screen py-24 bg-white z-0">
+        <div class="max-w-screen-xl mx-auto px-6">
+            <!-- Section Header with Lines -->
+            <div class="section-header relative mb-24">
+                <div class="horizontal-line top-12 w-full"></div>
+                <h2 class="text-3xl md:text-4xl font-light inline-block bg-white px-4 relative z-10">联系我</h2>
+                <div class="corner-line right-0 top-0"></div>
+                <div class="diagonal-line -right-8 bottom-0"></div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-16">
+                <div data-aos="fade-right">
+                    <h3 class="text-xl font-light mb-8">发送消息</h3>
+                    
+                    <form id="contact-form" class="space-y-6">
+                        <div>
+                            <label for="name" class="block text-sm text-gray-600 mb-2">姓名</label>
+                            <input type="text" id="name" class="w-full bg-transparent border border-gray-300 px-4 py-3 text-black focus:outline-none focus:border-black transition-colors">
+                        </div>
+                        
+                        <div>
+                            <label for="email" class="block text-sm text-gray-600 mb-2">邮箱</label>
+                            <input type="email" id="email" class="w-full bg-transparent border border-gray-300 px-4 py-3 text-black focus:outline-none focus:border-black transition-colors">
+                        </div>
+                        
+                        <div>
+                            <label for="message" class="block text-sm text-gray-600 mb-2">消息</label>
+                            <textarea id="message" rows="6" class="w-full bg-transparent border border-gray-300 px-4 py-3 text-black focus:outline-none focus:border-black transition-colors resize-none"></textarea>
+                        </div>
+                        
+                        <button type="submit" class="line-button px-8 py-3 uppercase tracking-wider text-sm">
+                            发送消息
+                        </button>
+                    </form>
+                </div>
+                
+                <div data-aos="fade-left">
+                    <h3 class="text-xl font-light mb-8">联系信息</h3>
+                    
+                    <div class="space-y-8">
+                        <p class="text-gray-700 leading-relaxed">
+                            如果您对我的作品感兴趣，或者有任何合作意向，欢迎随时联系我。我期待与您一起创造令人惊艳的设计作品。
+                        </p>
+                        
+                        <div class="space-y-6">
+                            <div class="flex items-start space-x-4">
+                                <div class="w-10 h-10 flex items-center justify-center border border-gray-300 rounded-full flex-shrink-0">
+                                    <i class="fa fa-envelope text-sm"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-sm text-gray-600 mb-1">邮箱</h4>
+                                    <a href="mailto:xuzhong@design.com" class="text-black hover:underline">xuzhong@design.com</a>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start space-x-4">
+                                <div class="w-10 h-10 flex items-center justify-center border border-gray-300 rounded-full flex-shrink-0">
+                                    <i class="fa fa-phone text-sm"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-sm text-gray-600 mb-1">电话</h4>
+                                    <a href="tel:+8613800138000" class="text-black hover:underline">+86 138 0013 8000</a>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start space-x-4">
+                                <div class="w-10 h-10 flex items-center justify-center border border-gray-300 rounded-full flex-shrink-0">
+                                    <i class="fa fa-map-marker text-sm"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-sm text-gray-600 mb-1">地址</h4>
+                                    <p class="text-black">上海市浦东新区张江高科技园区</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-12">
+                            <h4 class="text-sm text-gray-600 mb-4">社交媒体</h4>
+                            
+                            <div class="flex space-x-6">
+                                <a href="#" class="w-10 h-10 flex items-center justify-center border border-gray-300 rounded-full hover:border-black hover:bg-black hover:text-white transition-colors duration-300">
+                                    <i class="fa fa-instagram text-sm"></i>
+                                </a>
+                                
+                                <a href="#" class="w-10 h-10 flex items-center justify-center border border-gray-300 rounded-full hover:border-black hover:bg-black hover:text-white transition-colors duration-300">
+                                    <i class="fa fa-behance text-sm"></i>
+                                </a>
+                                
+                                <a href="#" class="w-10 h-10 flex items-center justify-center border border-gray-300 rounded-full hover:border-black hover:bg-black hover:text-white transition-colors duration-300">
+                                    <i class="fa fa-dribbble text-sm"></i>
+                                </a>
+                                
+                                <a href="#" class="w-10 h-10 flex items-center justify-center border border-gray-300 rounded-full hover:border-black hover:bg-black hover:text-white transition-colors duration-300">
+                                    <i class="fa fa-linkedin text-sm"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="py-12 bg-light-gray border-t border-gray-200">
+        <div class="max-w-screen-xl mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-6 md:mb-0">
+                    <a href="#" class="text-2xl font-light tracking-wider">
+                        <span class="text-black">xuzhong</span><span class="text-gray-500">个人作品集</span>
+                    </a>
+                </div>
+                
+                <div class="text-sm text-gray-600">
+                    © 2025 xuzhong. All rights reserved.
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Project Modal -->
+    <div id="project-modal" class="fixed inset-0 bg-black/90 z-50 hidden flex items-center justify-center">
+        <div class="max-w-4xl mx-auto p-6">
+            <div class="bg-white p-8 relative">
+                <button id="close-modal" class="absolute top-4 right-4 text-gray-500 hover:text-black">
+                    <i class="fa fa-times text-xl"></i>
+                </button>
+                
+                <div id="modal-content">
+                    <!-- Content will be dynamically inserted here -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Initialize AOS Animation Library
+        document.addEventListener('DOMContentLoaded', function() {
+            AOS.init({
+                duration: 800,
+                easing: 'ease-in-out',
+                once: true
+            });
+            
+            // Mobile Menu Toggle
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            mobileMenuButton.addEventListener('click', function() {
+                mobileMenu.classList.toggle('hidden');
+            });
+            
+            // Smooth Scrolling for Anchor Links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    
+                    if (targetElement) {
+                        // Close mobile menu if open
+                        if (!mobileMenu.classList.contains('hidden')) {
+                            mobileMenu.classList.add('hidden');
+                        }
+                        
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+            
+            // Typing Effect
+            const typingEffect = (element, words, typingSpeed = 100, pauseTime = 1000) => {
+                let wordIndex = 0;
+                let charIndex = 0;
+                let isDeleting = false;
+            
+                function type() {
+                    const currentWord = words[wordIndex];
+                
+                    if (isDeleting) {
+                        // Delete characters
+                        element.textContent = currentWord.substring(0, charIndex - 1);
+                        charIndex--;
+                    } else {
+                        // Add characters
+                        element.textContent = currentWord.substring(0, charIndex + 1);
+                        charIndex++;
+                    }
+                
+                    // Handle state transitions
+                    if (!isDeleting && charIndex === currentWord.length) {
+                        isDeleting = true;
+                        setTimeout(type, pauseTime); // Pause after completing a word
+                    } else if (isDeleting && charIndex === 0) {
+                        isDeleting = false;
+                        wordIndex = (wordIndex + 1) % words.length; // Cycle through words
+                        setTimeout(type, 200); // Brief pause before starting new word
+                    } else {
+                        // Continue current operation
+                        setTimeout(type, isDeleting ? typingSpeed/2 : typingSpeed);
+                    }
+                }
+            
+                type(); // Start animation
+            };
+            
+            // Initialize typing effect
+            typingEffect(
+                document.getElementById('typing-text'),
+                ['电商设计师', 'UI设计师', '品牌设计师', '创意摄影师'],
+                80, 
+                1000
+            );
+            
+            // Mouse Follow Effect
+            const cursorFollowEffect = () => {
+                const cursor = document.querySelector('.cursor-follow');
+                let mouseX = 0, mouseY = 0;
+                let cursorX = 0, cursorY = 0;
+                
+                document.addEventListener('mousemove', (e) => {
+                    mouseX = e.clientX;
+                    mouseY = e.clientY;
+                });
+                
+                function animateCursor() {
+                    // Smoothly move cursor towards mouse position
+                    cursorX += (mouseX - cursorX) * 0.1;
+                    cursorY += (mouseY - cursorY) * 0.1;
+                    
+                    cursor.style.left = `${cursorX}px`;
+                    cursor.style.top = `${cursorY}px`;
+                    
+                    requestAnimationFrame(animateCursor);
+                }
+                
+                animateCursor();
+                
+                // Hide cursor on touch devices
+                if ('ontouchstart' in window) {
+                    cursor.style.display = 'none';
+                }
+                
+                // Hover effects for interactive elements
+                const interactiveElements = document.querySelectorAll('a, button, .project-card');
+                
+                interactiveElements.forEach(element => {
+                    element.addEventListener('mouseenter', () => {
+                        cursor.style.width = '40px';
+                        cursor.style.height = '40px';
+                        cursor.style.borderWidth = '2px';
+                    });
+                    
+                    element.addEventListener('mouseleave', () => {
+                        cursor.style.width = '20px';
+                        cursor.style.height = '20px';
+                        cursor.style.borderWidth = '1px';
+                    });
+                });
+            };
+            
+            cursorFollowEffect();
+            
+            // Parallax Effect
+            const parallaxEffect = () => {
+                const background = document.querySelector('.parallax-bg');
+                
+                window.addEventListener('scroll', () => {
+                    const scrollY = window.scrollY;
+                    const scrollPercent = scrollY / (document.documentElement.scrollHeight - window.innerHeight);
+                    
+                    // Move background opposite to scroll direction
+                    background.style.transform = `translateY(${scrollY * 0.1}px)`;
+                });
+            };
+            
+            parallaxEffect();
+            
+            // Screen Transition Effects
+            const screenTransitionEffect = () => {
+                const screens = document.querySelectorAll('.screen');
+                
+                window.addEventListener('scroll', () => {
+                    const scrollY = window.scrollY;
+                    const windowHeight = window.innerHeight;
+                    
+                    // First screen and second screen transition (front covers back)
+                    if (scrollY < windowHeight) {
+                        const progress = Math.min(1, scrollY / windowHeight);
+                        const translateY = -500 * (1 - progress);
+                        screens[1].style.transform = `translateY(${translateY}px)`;
+                    }
+                    
+                    // Second screen and third screen transition (back covers front)
+                    if (scrollY >= windowHeight && scrollY < windowHeight * 2) {
+                        const progress = Math.min(1, (scrollY - windowHeight) / windowHeight);
+                        const translateY = 500 * progress;
+                        screens[1].style.transform = `translateY(${translateY}px)`;
+                        screens[2].style.transform = `translateY(${-500 * (1 - progress)}px)`;
+                    }
+                    
+                    // Third screen and fourth screen transition
+                    if (scrollY >= windowHeight * 2 && scrollY < windowHeight * 3) {
+                        const progress = Math.min(1, (scrollY - windowHeight * 2) / windowHeight);
+                        const translateY = 500 * progress;
+                        screens[2].style.transform = `translateY(${translateY}px)`;
+                        screens[3].style.transform = `translateY(${-500 * (1 - progress)}px)`;
+                    }
+                    
+                    // Fourth screen and fifth screen transition
+                    if (scrollY >= windowHeight * 3 && scrollY < windowHeight * 4) {
+                        const progress = Math.min(1, (scrollY - windowHeight * 3) / windowHeight);
+                        const translateY = 500 * progress;
+                        screens[3].style.transform = `translateY(${translateY}px)`;
+                        screens[4].style.transform = `translateY(${-500 * (1 - progress)}px)`;
+                    }
+                });
+            };
+            
+            screenTransitionEffect();
+            
+            // Skill Bar Animation
+            const animateSkillBars = () => {
+                const skillBars = document.querySelectorAll('.skill-progress');
+                
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const width = entry.target.getAttribute('data-width');
+                            entry.target.style.width = width;
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.5 });
+                
+                skillBars.forEach(bar => {
+                    observer.observe(bar);
+                });
+            };
+            
+            animateSkillBars();
+            
+            // Project Filter
+            const filterProjects = () => {
+                const filterBtns = document.querySelectorAll('.filter-btn');
+                const projectCards = document.querySelectorAll('.project-card');
+                
+                filterBtns.forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        // Remove active class from all buttons
+                        filterBtns.forEach(b => {
+                            b.classList.remove('active', 'bg-black', 'text-white');
+                            b.classList.add('text-black', 'hover:bg-black', 'hover:text-white');
+                        });
+                        
+                        // Add active class to clicked button
+                        btn.classList.add('active', 'bg-black', 'text-white');
+                        btn.classList.remove('text-black', 'hover:bg-black', 'hover:text-white');
+                        
+                        const filter = btn.getAttribute('data-filter');
+                        
+                        // Filter projects
+                        projectCards.forEach(card => {
+                            if (filter === 'all' || card.getAttribute('data-category') === filter) {
+                                card.style.display = 'block';
+                                setTimeout(() => {
+                                    card.style.opacity = '1';
+                                    card.style.transform = 'scale(1)';
+                                }, 50);
+                            } else {
+                                card.style.opacity = '0';
+                                card.style.transform = 'scale(0.8)';
+                                setTimeout(() => {
+                                    card.style.display = 'none';
+                                }, 300);
+                            }
+                        });
+                    });
+                });
+            };
+            
+            filterProjects();
+            
+            // Project Modal
+            const projectModal = document.getElementById('project-modal');
+            const closeModal = document.getElementById('close-modal');
+            const modalContent = document.getElementById('modal-content');
+            const projectButtons = document.querySelectorAll('.project-details-btn');
+            
+            // Project data
+            const projectsData = {
+                project1: {
+                    title: "数据可视化界面",
+                    description: "这是一个为电商平台设计的数据可视化界面项目。通过简洁的设计和清晰的数据展示，帮助用户快速理解和分析销售数据，提升决策效率。",
+                    images: [
+                        "https://p3-doubao-search-sign.byteimg.com/labis/9712a446f873da39349608e6ca78382a~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&x-expires=1792231224&x-signature=3u3QbF23tkZTHZKDYzix7JFd0aQ%3D",
+                        "https://p11-doubao-search-sign.byteimg.com/labis/994b7b361bd7c2629297fb70b2fd412c~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&x-expires=1792231224&x-signature=Yi4va6L%2BVZj1J8TBijUOSZsaLKY%3D"
+                    ],
+                    category: "UI设计",
+                    date: "2024年3月"
+                },
+                project2: {
+                    title: "极简产品包装",
+                    description: "为高端护肤品品牌设计的极简主义包装系列。通过简洁的线条和纯净的白色调，展现产品的高端品质和简约美学。",
+                    images: [
+                        "https://p11-doubao-search-sign.byteimg.com/labis/36b423748d4db712636b12f0d8c7d8e5~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&x-expires=1792231224&x-signature=%2BpnLDdeg47I6FmiXNvs805Ej%2Bbc%3D",
+                        "https://p11-doubao-search-sign.byteimg.com/labis/089ad945e9301d07183f3a734176a07f~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&x-expires=1792231224&x-signature=e9zk8f%2B7vPaDmNbzDYlm2yIkH%2BY%3D"
+                    ],
+                    category: "产品设计",
+                    date: "2024年1月"
+                },
+                project3: {
+                    title: "品牌标识设计",
+                    description: "为科技初创公司设计的极简主义品牌标识。通过几何线条和抽象形状，传达公司的创新理念和现代感。",
+                    images: [
+                        "https://p11-doubao-search-sign.byteimg.com/tos-cn-i-be4g95zd3a/2303672410064814084~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&x-expires=1792231224&x-signature=6Zet8JatUTU9VfzQR2XaWxSroAM%3D",
+                        "https://p26-doubao-search-sign.byteimg.com/pgc-image/3b7d458748944ac3a86cca6fdb2caf03~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&x-expires=1792231224&x-signature=q9uj%2FOi6a04MAuFnwWp24R5E0gw%3D"
+                    ],
+                    category: "品牌设计",
+                    date: "2023年11月"
+                },
+                project4: {
+                    title: "移动应用界面",
+                    description: "为电商平台设计的移动应用界面。通过色彩丰富的设计和直观的用户界面，提升用户购物体验和转化率。",
+                    images: [
+                        "https://p11-doubao-search-sign.byteimg.com/mosaic-legacy/31f00003db691ed4f93c~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&x-expires=1792231224&x-signature=5u7RAVoSh0LRbNx1WS%2F7dQGMgfU%3D",
+                        "https://p11-doubao-search-sign.byteimg.com/labis/49003910634b5281c9d370590ad9911c~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&x-expires=1792231224&x-signature=qek8VSdEcQM1XjGhjXF90aoBUZM%3D"
+                    ],
+                    category: "UI设计",
+                    date: "2023年9月"
+                },
+                project5: {
+                    title: "化妆品包装设计",
+                    description: "为高端化妆品品牌设计的包装系列。通过简约现代的设计语言，展现产品的高端品质和独特魅力。",
+                    images: [
+                        "https://p11-doubao-search-sign.byteimg.com/tos-cn-i-be4g95zd3a/2291789841924358147~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&x-expires=1792231224&x-signature=3cEkR62m4tsJH8oK4enX6KkEYlE%3D",
+                        "https://p3-doubao-search-sign.byteimg.com/labis/9e26d5c167614f659787e0bdac06d2e6~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&x-expires=1792231224&x-signature=eozzcPqQYoYNZ0%2BL%2BzYlteMnK%2BA%3D"
+                    ],
+                    category: "产品设计",
+                    date: "2023年7月"
+                },
+                project6: {
+                    title: "品牌图标设计",
+                    description: "为多个品牌设计的图标系列。通过简约线条风格，创造出独特而易于识别的品牌视觉符号。",
+                    images: [
+                        "https://p26-doubao-search-sign.byteimg.com/pgc-image/3b7d458748944ac3a86cca6fdb2caf03~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&x-expires=1792231224&x-signature=q9uj%2FOi6a04MAuFnwWp24R5E0gw%3D",
+                        "https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/284c99cb22da45028e943f0a31c3839c~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=20260420175934A77265B749367343E20D&rrcfp=f06b921b&x-expires=1779271248&x-signature=fJcOj2D73QMo7DE8IMGoFvTFtkc%3D"
+                    ],
+                    category: "品牌设计",
+                    date: "2023年5月"
+                }
+            };
+            
+            // Open modal
+            projectButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const projectId = button.getAttribute('data-project');
+                    const project = projectsData[projectId];
+                    
+                    if (project) {
+                        // Generate modal content
+                        let content = `
+                            <div class="mb-8">
+                                <h2 class="text-3xl font-light mb-4">${project.title}</h2>
+                                <div class="flex items-center space-x-4 mb-6">
+                                    <span class="text-sm text-gray-600">${project.category}</span>
+                                    <span class="text-sm text-gray-400">|</span>
+                                    <span class="text-sm text-gray-600">${project.date}</span>
+                                </div>
+                                <p class="text-gray-700 leading-relaxed">${project.description}</p>
+                            </div>
+                            
+                            <div class="grid grid-cols-1 gap-6">
+                        `;
+                        
+                        // Add images
+                        project.images.forEach(image => {
+                            content += `
+                                <div class="overflow-hidden">
+                                    <img src="${image}" alt="${project.title}" class="w-full h-auto hover-scale">
+                                </div>
+                            `;
+                        });
+                        
+                        content += `
+                            </div>
+                            
+                            <div class="mt-8 pt-8 border-t border-gray-200">
+                                <a href="#contact" class="line-button inline-block px-6 py-3 uppercase tracking-wider text-sm" id="contact-from-modal">
+                                    咨询项目
+                                </a>
+                            </div>
+                        `;
+                        
+                        modalContent.innerHTML = content;
+                        projectModal.classList.remove('hidden');
+                        document.body.style.overflow = 'hidden';
+                        
+                        // Contact button in modal
+                        document.getElementById('contact-from-modal').addEventListener('click', () => {
+                            projectModal.classList.add('hidden');
+                            document.body.style.overflow = '';
+                        });
+                    }
+                });
+            });
+            
+            // Close modal
+            closeModal.addEventListener('click', () => {
+                projectModal.classList.add('hidden');
+                document.body.style.overflow = '';
+            });
+            
+            // Close modal when clicking outside
+            projectModal.addEventListener('click', (e) => {
+                if (e.target === projectModal) {
+                    projectModal.classList.add('hidden');
+                    document.body.style.overflow = '';
+                }
+            });
+            
+            // Contact Form Submission
+            const contactForm = document.getElementById('contact-form');
+            
+            contactForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const name = document.getElementById('name').value;
+                const email = document.getElementById('email').value;
+                const message = document.getElementById('message').value;
+                
+                if (name && email && message) {
+                    // Simulate form submission
+                    alert('感谢您的留言！我会尽快回复您。');
+                    contactForm.reset();
+                } else {
+                    alert('请填写所有必填字段。');
+                }
+            });
+            
+            // Character Reveal Animation
+            const setupCharReveal = () => {
+                const revealElements = document.querySelectorAll('.char-reveal');
+                
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('active');
+                            
+                            // Split text into characters if not already done
+                            if (!entry.target.classList.contains('processed')) {
+                                const text = entry.target.textContent;
+                                entry.target.textContent = '';
+                                entry.target.classList.add('processed');
+                                
+                                for (let i = 0; i < text.length; i++) {
+                                    const span = document.createElement('span');
+                                    span.textContent = text[i];
+                                    span.style.transitionDelay = `${i * 30}ms`;
+                                    entry.target.appendChild(span);
+                                }
+                            }
+                            
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.3 });
+                
+                revealElements.forEach(element => {
+                    observer.observe(element);
+                });
+            };
+            
+            setupCharReveal();
+        });
+    </script>
+
+</body></html>
